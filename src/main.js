@@ -1,6 +1,5 @@
 import '../public/index.html'
 import Vue from './vue'
-import Observe from './observe'
 
 const vm = new Vue({
   el: '#app',
@@ -13,5 +12,5 @@ const vm = new Vue({
     }
   },
 })
-new Observe(vm.$data)
+
 window.vm = vm

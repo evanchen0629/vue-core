@@ -2,7 +2,9 @@
   observer用于给data中所有的数据添加getter和setter
   方便我们在获取或者设置data中数据的时候，实现我们的逻辑
 */
-import Watcher from './watcher'
+
+import { Dep } from './watcher'
+
 export default class Observer {
   constructor(data) {
     this.data = data
@@ -25,12 +27,16 @@ export default class Observer {
   }
 
   // 定义响应式的数据（数据劫持）
+  // dep保存了所有的订阅了该数据的订阅者
   defineReactive(obj, key, value) {
     let that = this
+    let dep = new Dep()
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get() {
+        // 如果Dep.target中有watcher对象，存储到订阅者数组中
+        Dep.target && dep.addSub(Dep.target)
         return value
       },
       set(newValue) {
@@ -40,10 +46,8 @@ export default class Observer {
         value = newValue
         // 如果newValue是一个对象，也应该对她进行劫持
         that.walk(newValue)
-        window.watcher.update()
-        window.watcher1.update()
-        window.watcher2.update()
-        window.watcher3.update()
+        // 发布通知，让所有的订阅者更新内容
+        dep.notify()
       }
     })
   }

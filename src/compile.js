@@ -1,4 +1,4 @@
-import Watcher from './watcher'
+import { Watcher } from './watcher'
 
 export default class Compile{
   constructor(vm, el){
@@ -95,7 +95,7 @@ let CompileUtil = {
     if (reg.test(txt)) {
       let expr = RegExp.$1.trim()
       node.textContent = txt.replace(reg, this.getVMValue(vm, expr))
-      window.watcher1 = new Watcher(vm, expr, newValue => {
+      new Watcher(vm, expr, newValue => {
         node.textContent = txt.replace(reg, newValue)
       })
     }
@@ -113,14 +113,14 @@ let CompileUtil = {
   html(node, vm, expr) {
     // 为什么不直接写vm.$data[expr],因为如果数据是复杂类型,那么就会拿不到数据
     node.innerHTML = this.getVMValue(vm, expr)
-    window.watcher2 = new Watcher(vm, expr, newValue => {
+    new Watcher(vm, expr, newValue => {
       node.innerHTML = newValue
     })
   },
   // v-text
   text(node, vm, expr) {
     node.textContent = this.getVMValue(vm, expr)
-    window.watcher3 = new Watcher(vm, expr, (newValue, oldValue) => {
+    new Watcher(vm, expr, (newValue, oldValue) => {
       node.textContent = newValue
     })
   },
@@ -132,7 +132,7 @@ let CompileUtil = {
     node.addEventListener("input", function() {
       self.setVMValue(vm, expr, this.value)
     })
-    window.watcher = new Watcher(vm, expr, newValue => {
+    new Watcher(vm, expr, newValue => {
       node.value = newValue
     })
   },
