@@ -5,7 +5,10 @@ const vm = new Vue({
   el: '#app',
   data: {
     msg: 'miniVue'
-  }
+  },
+  methods: {
+    fn(){
+      console.log(this.$data.msg);
+    }
+  },
 })
-console.log(vm.$el);
-console.log(vm.$data);
