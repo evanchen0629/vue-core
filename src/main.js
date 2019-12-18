@@ -10,8 +10,8 @@ const vm = new Vue({
   methods: {
     fn(){
       this.$data.msg = 'haha'
-      console.log(this.$data.msg);
     }
   },
 })
 new Observe(vm.$data)
+window.vm = vm

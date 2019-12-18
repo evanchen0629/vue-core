@@ -113,6 +113,15 @@ let CompileUtil = {
   text(node, vm, expr) {
     node.textContent = this.getVMValue(vm, expr)
   },
+  // v-model
+  model(node, vm, expr) {
+    let self = this
+    node.value = this.getVMValue(vm, expr)
+    // 实现双向的数据绑定， 给node注册input事件，当当前元素的value值发生改变，修改对应的数据
+    node.addEventListener("input", function() {
+      self.setVMValue(vm, expr, this.value)
+    })
+  },
   // 这个方法用于获取VM中的数据, 
   getVMValue(vm, expr) {
     // 获取到data中的数据
@@ -121,5 +130,17 @@ let CompileUtil = {
       data = data[key]
     })
     return data
+  },
+  setVMValue(vm, expr, value) {
+    let data = vm.$data
+    let arr = expr.split(".")
+    arr.forEach((key, index) => {
+      // 如果index是最后一个
+      if (index < arr.length - 1) {
+        data = data[key]
+      } else {
+        data[key] = value
+      }
+    })
   }
 }
