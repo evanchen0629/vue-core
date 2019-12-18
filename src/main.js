@@ -4,7 +4,7 @@ import Vue from './vue'
 const vm = new Vue({
   el: '#app',
   data: {
-    msg: 'miniVue'
+    msg: '<a href="#">dfaf</a>'
   },
   methods: {
     fn(){
