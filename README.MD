@@ -22,3 +22,15 @@
 
 4.vm.\$data && vm.$methods 挂载到 vm 上
 
+# 2.运行
+
+```bash
+git clone https://github.com/evanchen0629/vue-core.git
+
+cd vue-core
+
+npm install 或 yarn(推荐)
+
+npm run dev 或 yarn dev
+```
+
