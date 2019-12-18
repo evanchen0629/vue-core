@@ -32,6 +32,15 @@ export default class Compile{
         // 如果是元素， 需要解析指令
         this.compileElement(node)
       }
+      // 如果是文本节点
+      if (this.isTextNode(node)) {
+        // 如果是文本节点， 需要解析插值表达式
+        this.compileText(node)
+      }
+      // 如果当前节点还有子节点，需要递归的解析
+      if (node.childNodes && node.childNodes.length > 0) {
+        this.compile(node)
+      }
     })
   }
   /* 解析标签节点 */
@@ -41,7 +50,6 @@ export default class Compile{
     this.toArray(attributes).forEach(attr => {
       // 2. 解析vue的指令（所以以v-开头的属性）
       let attrName = attr.name
-
       if (this.isDirective(attrName)) {
         let type = attrName.slice(2)
         let expr = attr.value
@@ -54,6 +62,10 @@ export default class Compile{
         }
       }
     })
+  }
+  // 解析文本节点
+  compileText(node) {
+    CompileUtil.mustache(node, this.vm)
   }
   /* 工具方法 */
   toArray(likeArray) {
@@ -72,8 +84,17 @@ export default class Compile{
   isEventDirective(type) {
     return type.split(":")[0] === "on"
   }
+
 }
 let CompileUtil = {
+  mustache(node, vm) {
+    let txt = node.textContent
+    let reg = /\{\{(.+)\}\}/
+    if (reg.test(txt)) {
+      let expr = RegExp.$1.trim()
+      node.textContent = txt.replace(reg, this.getVMValue(vm, expr))
+    }
+  },
   eventHandler(node, vm, type, expr) {
     // 给当前元素注册事件即可
     let eventType = type.split(":")[1]
@@ -100,5 +121,5 @@ let CompileUtil = {
       data = data[key]
     })
     return data
-  },
+  }
 }
