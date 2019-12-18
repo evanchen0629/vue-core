@@ -83,9 +83,14 @@ let CompileUtil = {
       node.addEventListener(eventType, fn.bind(vm))
     }
   },
+  // v-html
   html(node, vm, expr) {
     // 为什么不直接写vm.$data[expr],因为如果数据是复杂类型,那么就会拿不到数据
     node.innerHTML = this.getVMValue(vm, expr)
+  },
+  // v-text
+  text(node, vm, expr) {
+    node.textContent = this.getVMValue(vm, expr)
   },
   // 这个方法用于获取VM中的数据, 
   getVMValue(vm, expr) {
