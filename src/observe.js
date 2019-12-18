@@ -2,6 +2,7 @@
   observer用于给data中所有的数据添加getter和setter
   方便我们在获取或者设置data中数据的时候，实现我们的逻辑
 */
+import Watcher from './watcher'
 export default class Observer {
   constructor(data) {
     this.data = data
@@ -39,6 +40,10 @@ export default class Observer {
         value = newValue
         // 如果newValue是一个对象，也应该对她进行劫持
         that.walk(newValue)
+        window.watcher.update()
+        window.watcher1.update()
+        window.watcher2.update()
+        window.watcher3.update()
       }
     })
   }

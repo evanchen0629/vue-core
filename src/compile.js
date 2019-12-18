@@ -1,3 +1,5 @@
+import Watcher from './watcher'
+
 export default class Compile{
   constructor(vm, el){
     this.vm = vm
@@ -93,6 +95,9 @@ let CompileUtil = {
     if (reg.test(txt)) {
       let expr = RegExp.$1.trim()
       node.textContent = txt.replace(reg, this.getVMValue(vm, expr))
+      window.watcher1 = new Watcher(vm, expr, newValue => {
+        node.textContent = txt.replace(reg, newValue)
+      })
     }
   },
   eventHandler(node, vm, type, expr) {
@@ -108,10 +113,16 @@ let CompileUtil = {
   html(node, vm, expr) {
     // 为什么不直接写vm.$data[expr],因为如果数据是复杂类型,那么就会拿不到数据
     node.innerHTML = this.getVMValue(vm, expr)
+    window.watcher2 = new Watcher(vm, expr, newValue => {
+      node.innerHTML = newValue
+    })
   },
   // v-text
   text(node, vm, expr) {
     node.textContent = this.getVMValue(vm, expr)
+    window.watcher3 = new Watcher(vm, expr, (newValue, oldValue) => {
+      node.textContent = newValue
+    })
   },
   // v-model
   model(node, vm, expr) {
@@ -120,6 +131,9 @@ let CompileUtil = {
     // 实现双向的数据绑定， 给node注册input事件，当当前元素的value值发生改变，修改对应的数据
     node.addEventListener("input", function() {
       self.setVMValue(vm, expr, this.value)
+    })
+    window.watcher = new Watcher(vm, expr, newValue => {
+      node.value = newValue
     })
   },
   // 这个方法用于获取VM中的数据, 
